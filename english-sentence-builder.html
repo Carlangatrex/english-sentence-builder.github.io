@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Construye Oraciones en Inglés, Francés y Español</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      h1,
+      h2 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #3498db;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        font-size: 1.8em;
+        color: #2c3e50;
+      }
+      .language-selector,
+      .level-selector {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .language-btn,
+      .level-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease,
+          box-shadow 0.3s ease;
+        background-color: #3498db;
+        color: white;
+        font-size: 1em;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .language-btn:hover,
+      .level-btn:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      }
+      .language-btn.active,
+      .level-btn.active {
+        background-color: #2ecc71;
+      }
+      .instructions {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+      }
+      .instructions h3 {
+        color: #e67e22;
+        margin-bottom: 10px;
+        font-size: 1.4em;
+      }
+      .instructions p {
+        color: #2c3e50;
+        line-height: 1.6;
+        font-size: 1em;
+      }
+      .game-container {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        width: 100%;
+      }
+      .words-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 20px 0;
+        min-height: 100px;
+        padding: 15px;
+        background-color: #f1f8ff;
+        border-radius: 8px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .sentence-area {
+        min-height: 80px;
+        border: 2px dashed #3498db;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        background-color: #ecf9ff;
+      }
+      .word,
+      .used-word {
+        padding: 12px 18px;
+        background-color: #3498db;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        user-select: none;
+        transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        font-size: 1.1em;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .word:hover {
+        transform: translateY(-2px);
+        background-color: #2980b9;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      }
+      .word.used {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .used-word {
+        background-color: #2ecc71;
+      }
+      .used-word:hover {
+        background-color: #27ae60;
+      }
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+      }
+      button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease,
+          box-shadow 0.3s ease;
+        font-size: 1em;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .check-btn {
+        background-color: #2ecc71;
+        color: white;
+      }
+      .check-btn:hover {
+        background-color: #27ae60;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      }
+      .clear-btn {
+        background-color: #e74c3c;
+        color: white;
+      }
+      .clear-btn:hover {
+        background-color: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      }
+      .next-btn {
+        background-color: #3498db;
+        color: white;
+      }
+      .next-btn:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      }
+      .help-btn {
+        background-color: #f39c12;
+        color: white;
+      }
+      .help-btn:hover {
+        background-color: #d35400;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      }
+      .feedback {
+        text-align: center;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.1em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .correct {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .incorrect {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .score {
+        text-align: center;
+        font-size: 1.3em;
+        margin-bottom: 20px;
+        color: #2c3e50;
+        font-weight: bold;
+      }
+      .hint {
+        text-align: center;
+        margin: 10px 0;
+        color: #6c757d;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Construye Oraciones en Inglés, Francés y Español</h1>
+
+    <div class="language-selector">
+      <button class="language-btn active" data-language="english">
+        Inglés
+      </button>
+      <button class="language-btn" data-language="french">Francés</button>
+      <button class="language-btn" data-language="spanish">Español</button>
+    </div>
+
+    <div class="instructions">
+      <h3>Instrucciones:</h3>
+      <p>
+        1. Selecciona las palabras del banco de palabras y colócalas en el orden
+        correcto para formar una oración.
+      </p>
+      <p>
+        2. Haz clic en "Verificar" para comprobar si tu oración es correcta.
+      </p>
+      <p>3. Gana puntos por cada oración correcta.</p>
+    </div>
+
+    <div class="level-selector">
+      <button class="level-btn active" data-level="easy">Fácil</button>
+      <button class="level-btn" data-level="medium">Medio</button>
+      <button class="level-btn" data-level="hard">Difícil</button>
+    </div>
+
+    <div class="score">Puntuación: <span id="score-value">0</span></div>
+
+    <div class="game-container">
+      <h2>Nivel: <span id="current-level">Fácil</span></h2>
+
+      <div class="hint" id="translation"></div>
+
+      <div class="sentence-area" id="sentence-area"></div>
+
+      <div class="words-container" id="words-container"></div>
+
+      <div class="feedback" id="feedback" style="display: none"></div>
+
+      <div class="buttons">
+        <button class="check-btn" id="check-btn">Verificar</button>
+        <button class="clear-btn" id="clear-btn">Limpiar</button>
+        <button class="help-btn" id="hint-btn">Pista</button>
+        <button class="next-btn" id="next-btn" style="display: none">
+          Siguiente
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const sentences = {
+        english: {
+          easy: [
+            {
+              words: ["I", "like", "to", "play", "soccer"],
+              correct: "I like to play soccer",
+              translation: "Me gusta jugar al fútbol",
+            },
+            {
+              words: ["She", "reads", "books", "every", "day"],
+              correct: "She reads books every day",
+              translation: "Ella lee libros todos los días",
+            },
+          ],
+          medium: [
+            {
+              words: [
+                "The",
+                "students",
+                "are",
+                "studying",
+                "for",
+                "their",
+                "exam",
+              ],
+              correct: "The students are studying for their exam",
+              translation: "Los estudiantes están estudiando para su examen",
+            },
+          ],
+          hard: [
+            {
+              words: [
+                "If",
+                "it",
+                "rains",
+                "tomorrow",
+                "we",
+                "will",
+                "cancel",
+                "the",
+                "picnic",
+              ],
+              correct: "If it rains tomorrow we will cancel the picnic",
+              translation: "Si llueve mañana, cancelaremos el picnic",
+            },
+          ],
+        },
+        french: {
+          easy: [
+            {
+              words: ["Je", "aime", "jouer", "au", "foot"],
+              correct: "J'aime jouer au foot",
+              translation: "Me gusta jugar al fútbol",
+            },
+          ],
+          medium: [
+            {
+              words: ["Les", "étudiants", "étudient", "pour", "leur", "examen"],
+              correct: "Les étudiants étudient pour leur examen",
+              translation: "Los estudiantes están estudiando para su examen",
+            },
+          ],
+          hard: [
+            {
+              words: [
+                "Si",
+                "il",
+                "pleut",
+                "demain",
+                "nous",
+                "annulerons",
+                "le",
+                "pique-nique",
+              ],
+              correct: "S'il pleut demain nous annulerons le pique-nique",
+              translation: "Si llueve mañana, cancelaremos el picnic",
+            },
+          ],
+        },
+        spanish: {
+          easy: [
+            {
+              words: ["Me", "gusta", "jugar", "al", "fútbol"],
+              correct: "Me gusta jugar al fútbol",
+              translation: "I like to play soccer",
+            },
+          ],
+          medium: [
+            {
+              words: [
+                "Los",
+                "estudiantes",
+                "están",
+                "estudiando",
+                "para",
+                "su",
+                "examen",
+              ],
+              correct: "Los estudiantes están estudiando para su examen",
+              translation: "The students are studying for their exam",
+            },
+          ],
+          hard: [
+            {
+              words: ["Si", "llueve", "mañana", "cancelaremos", "el", "picnic"],
+              correct: "Si llueve mañana cancelaremos el picnic",
+              translation: "If it rains tomorrow we will cancel the picnic",
+            },
+          ],
+        },
+      };
+
+      let currentLanguage = "english";
+      let currentLevel = "easy";
+      let currentSentenceIndex = 0;
+      let score = 0;
+      let usedWords = [];
+      let hintUsed = false;
+
+      const wordsContainer = document.getElementById("words-container");
+      const sentenceArea = document.getElementById("sentence-area");
+      const feedbackEl = document.getElementById("feedback");
+      const scoreValue = document.getElementById("score-value");
+      const translationEl = document.getElementById("translation");
+      const currentLevelEl = document.getElementById("current-level");
+      const checkBtn = document.getElementById("check-btn");
+      const clearBtn = document.getElementById("clear-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const hintBtn = document.getElementById("hint-btn");
+      const levelBtns = document.querySelectorAll(".level-btn");
+      const languageBtns = document.querySelectorAll(".language-btn");
+
+      function loadSentence() {
+        hintUsed = false;
+        wordsContainer.innerHTML = "";
+        sentenceArea.innerHTML = "";
+        usedWords = [];
+        feedbackEl.style.display = "none";
+        nextBtn.style.display = "none";
+        checkBtn.style.display = "block";
+
+        const currentSentence =
+          sentences[currentLanguage][currentLevel][currentSentenceIndex];
+        translationEl.textContent = `Traducción: ${currentSentence.translation}`;
+
+        // Shuffle words
+        const shuffledWords = [...currentSentence.words].sort(
+          () => Math.random() - 0.5
+        );
+
+        shuffledWords.forEach((word) => {
+          const wordEl = document.createElement("div");
+          wordEl.classList.add("word");
+          wordEl.textContent = word;
+          wordEl.addEventListener("click", () => selectWord(wordEl, word));
+          wordsContainer.appendChild(wordEl);
+        });
+      }
+
+      function selectWord(wordEl, word) {
+        if (!wordEl.classList.contains("used")) {
+          wordEl.classList.add("used");
+
+          const usedWordEl = document.createElement("div");
+          usedWordEl.classList.add("used-word");
+          usedWordEl.textContent = word;
+          usedWordEl.addEventListener("click", () =>
+            removeWord(usedWordEl, wordEl, word)
+          );
+
+          sentenceArea.appendChild(usedWordEl);
+          usedWords.push(word);
+        }
+      }
+
+      function removeWord(usedWordEl, originalWordEl, word) {
+        usedWordEl.remove();
+        originalWordEl.classList.remove("used");
+        usedWords = usedWords.filter((w) => w !== word);
+      }
+
+      function checkSentence() {
+        const userSentence = usedWords.join(" ");
+        const correctSentence =
+          sentences[currentLanguage][currentLevel][currentSentenceIndex]
+            .correct;
+
+        if (userSentence === correctSentence) {
+          feedbackEl.textContent = "¡Correcto! ¡Bien hecho!";
+          feedbackEl.className = "feedback correct";
+          score += hintUsed ? 5 : 10;
+          scoreValue.textContent = score;
+          checkBtn.style.display = "none";
+          nextBtn.style.display = "block";
+        } else {
+          feedbackEl.textContent = "Incorrecto. Inténtalo de nuevo.";
+          feedbackEl.className = "feedback incorrect";
+        }
+
+        feedbackEl.style.display = "block";
+      }
+
+      function clearSentence() {
+        sentenceArea.innerHTML = "";
+
+        // Reset all words in the words container
+        const wordElements = wordsContainer.querySelectorAll(".word");
+        wordElements.forEach((word) => {
+          word.classList.remove("used");
+        });
+
+        usedWords = [];
+        feedbackEl.style.display = "none";
+      }
+
+      function nextSentence() {
+        currentSentenceIndex =
+          (currentSentenceIndex + 1) %
+          sentences[currentLanguage][currentLevel].length;
+        loadSentence();
+      }
+
+      function showHint() {
+        hintUsed = true;
+        const correctWords =
+          sentences[currentLanguage][currentLevel][
+            currentSentenceIndex
+          ].correct.split(" ");
+        clearSentence();
+
+        // Put the first two words in place
+        const wordElements = wordsContainer.querySelectorAll(".word");
+        wordElements.forEach((wordEl) => {
+          if (
+            correctWords[0] === wordEl.textContent ||
+            correctWords[1] === wordEl.textContent
+          ) {
+            selectWord(wordEl, wordEl.textContent);
+          }
+        });
+      }
+
+      function changeLevel(level) {
+        currentLevel = level;
+        currentLevelEl.textContent =
+          level.charAt(0).toUpperCase() + level.slice(1);
+        currentSentenceIndex = 0;
+        loadSentence();
+
+        // Update level buttons
+        levelBtns.forEach((btn) => {
+          if (btn.dataset.level === level) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+      }
+
+      function changeLanguage(language) {
+        currentLanguage = language;
+        currentSentenceIndex = 0;
+        loadSentence();
+
+        // Update language buttons
+        languageBtns.forEach((btn) => {
+          if (btn.dataset.language === language) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+      }
+
+      // Event listeners
+      checkBtn.addEventListener("click", checkSentence);
+      clearBtn.addEventListener("click", clearSentence);
+      nextBtn.addEventListener("click", nextSentence);
+      hintBtn.addEventListener("click", showHint);
+
+      levelBtns.forEach((btn) => {
+        btn.addEventListener("click", () => changeLevel(btn.dataset.level));
+      });
+
+      languageBtns.forEach((btn) => {
+        btn.addEventListener("click", () =>
+          changeLanguage(btn.dataset.language)
+        );
+      });
+
+      // Initialize the game
+      loadSentence();
+    </script>
+  </body>
+</html>
